@@ -1,0 +1,86 @@
+---
+title: "Mi primer documento de Quarto"
+format: html
+---
+
+Para crear un chunk de código podemos teclear `CTRL + ALT + I`:
+
+
+```{r}
+library(tidyverse)
+library(fpp3)
+```
+
+Para *correr* un chunk completo de código, podemos hacerlo con `CTRL/CMD + SHIFT + ENTER`. Para correr solo la línea o selección actual, simplemente `CTRL/CMD + ENTER`.
+
+
+```{r}
+#| eval: false
+
+readxl::read_excel()
+```
+
+
+```{r}
+tourism
+```
+
+
+```{r}
+index_var(tourism)
+```
+
+
+```{r}
+key_vars(tourism)
+```
+
+
+```{r}
+key_data(tourism) #<1>
+```
+1. `key_data` me arroja una tabla con una fila por cada serie de tiempo que contiene la tabla y el dato de cuántos valores contiene cada una.
+
+Para conocer las regiones que hay en Tasmania:
+```{r}
+distinct(filter(tourism, State == "Tasmania"), Region)
+```
+
+`CTRL + SHIFT + M` me pone el pipe.
+```{r}
+tourism |> #<1>
+  filter(State == "Tasmania", Region == "East Coast") |> #<2>
+  as_tibble() |> #<3>
+  group_by(Purpose) |>
+  summarise(mean_trips = mean(Trips))
+```
+1. Toma la tabla `tourism` y **luego**
+2. fíltrala para que el estado sea Tasmania y la región East Coast **luego**
+3. conviértela a una `tibble`
+
+
+peromeentiendenigualsiescriboasí a que si escribo así?
+```{r}
+tourism |>
+  filter(State == "Tasmania", Region == "East Coast") |>
+  autoplot(Trips)
+```
+
+La gráfica no sale tan bien. Vamos a poner cada serie en una gráfica por separado.
+
+
+```{r}
+tourism |>
+  filter(State == "Tasmania", Region == "East Coast") |>
+  autoplot(Trips) +
+  facet_wrap(vars(Purpose), scale = "free_y") + 
+  theme(legend.position = "none")
+```
+
+
+
+```{r}
+aus_production |> 
+    ggplot(aes(x = Quarter, y = Gas)) +
+    geom_point()
+```

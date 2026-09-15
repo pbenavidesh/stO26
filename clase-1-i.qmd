@@ -1,0 +1,107 @@
+---
+title: "Mi primer documento de Quarto"
+format: html
+---
+
+```{r}
+library(tidyverse)
+library(fpp3)
+```
+
+## Introducción
+
+**negritas**
+
+*cursiva* 
+
+Algunos atajos útiles de teclado:
+
+- `CTRL/CMD + ALT + I` para crear un nuevo chunk de código.
+- `CTRL/CMD + SHIFT + ENTER` para correr todo el código de un chunk.
+`CTRL/CMD + ENTER` para correr solo la línea o selección actual de un chunk.
+`CTRL/CMD + SHIFT + M` para insertar un *pipe*.
+
+`dplyr` tiene una función ``filter()` que oculta la función del mismo nombre de la paquetería `stats`. Si quisiera usar la función, tendría que escribirla así:
+
+```{r}
+#| eval: false
+
+stats::filter()
+```
+
+También puedo utilizar funciones de paqueterías que no están cargadas en el entorno escribiendo la paquetería antes de la función:
+
+```{r}
+#| eval: false
+
+readxl::read_excel()
+```
+
+
+```{r}
+tourism
+```
+
+Para conocer cuál variable es la `index`, puedo usar `index_var()`
+```{r}
+index_var(tourism)
+```
+
+
+```{r}
+key_vars(tourism)
+```
+
+
+```{r}
+key_data(tourism)
+```
+
+¿Qué regiones hay en Tasmania?
+
+```{r}
+distinct(filter(tourism, State == "Tasmania"), Region)
+```
+
+¿Cómo calculo los viajes promedio en la costa este de Tasmania?
+
+```{r}
+tourism|>filter(State=="Tasmania",Region=="East Coast")|>as_tibble()|>group_by(Purpose)|>summarise(mean_trips=mean(Trips))
+```
+
+Sinembargo,noeslomismointentarleeralgoasí que leer algo así.
+
+
+```{r}
+tourism |>
+  filter(
+    State == "Tasmania",
+    Region == "East Coast"
+  ) |>
+  as_tibble() |>
+  group_by(Purpose) |>
+  summarise(mean_trips = mean(Trips))
+```
+
+```{r}
+tourism |>
+  filter(State == "Tasmania", Region == "East Coast") |>
+  autoplot(Trips) +
+  facet_wrap(vars(Purpose), scale = "free_y") +
+  theme_dark() +
+  theme(legend.position = "none") +
+  labs(
+    title = "Viajes por propósito en la Costa Este de Tasmania",
+    subtitle = "Australia",
+    y = "Viajes (miles)",
+    caption = "Datos de la paquetería `fpp3`"
+  )
+```
+
+
+```{r}
+aus_production |> 
+    ggplot(aes(x = Quarter, y = Gas)) +
+    geom_point()
+```
+
